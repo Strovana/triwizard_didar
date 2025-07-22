@@ -14,21 +14,16 @@ import Tabs from "@mui/material/Tabs";
 import Box from "@mui/material/Box";
 import Post from "./Post";
 
-function Profile({ onBack, userAddress }) {
+function Profile({
+  onBack,
+  userAddress,
+  editButtonLabel = "Edit Profile",
+  editButtonStyle = {},
+  onEditProfile,
+  userProfile, // <-- receive from parent
+  setUserProfile // <-- receive from parent
+}) {
   const [activeTab, setActiveTab] = useState(0);
-  const [userProfile, setUserProfile] = useState({
-    name: userAddress ? `User ${userAddress.slice(-4)}` : "Sociva User",
-    address: userAddress || "0x1234...5678",
-    bio: "Building the future of decentralized social media 🚀",
-    location: "Metaverse",
-    website: "https://sociva.social",
-    joinedDate: "June 2024",
-    verified: false,
-    following: 198,
-    followers: 156,
-    sivs: 42,
-    isFollowing: false
-  });
 
   const [userSivs, setUserSivs] = useState([
     {
@@ -112,6 +107,11 @@ function Profile({ onBack, userAddress }) {
           </div>
           <div className="profile__headerInfo">
             <h2>{userProfile.name}</h2>
+            {userProfile.role && (
+              <span className={`profile__roleTag profile__roleTag--${userProfile.role}`}>
+                {userProfile.role === "teacher" ? "Teacher" : "Student"}
+              </span>
+            )}
             <span className="profile__sivCount">{userProfile.sivs} Sivs</span>
           </div>
         </div>
@@ -119,12 +119,16 @@ function Profile({ onBack, userAddress }) {
 
       {/* Cover and Avatar Section */}
       <div className="profile__coverSection">
-        <div className="profile__cover"></div>
+        <div
+          className="profile__cover"
+          style={userProfile.bannerImage ? { background: `url(${userProfile.bannerImage}) center/cover` } : {}}
+        ></div>
         <div className="profile__avatarSection">
           <div className="profile__avatar">
-            <Avatar 
-              name={userProfile.name} 
-              size="120" 
+            <Avatar
+              name={userProfile.name}
+              src={userProfile.profileImage || undefined}
+              size="120"
               round={true}
               color="#bb2b7a"
               fgColor="#ffffff"
@@ -136,8 +140,10 @@ function Profile({ onBack, userAddress }) {
               startIcon={<EditIcon />}
               className="profile__editButton"
               size="small"
+              style={editButtonStyle}
+              onClick={onEditProfile}
             >
-              Edit Profile
+              {editButtonLabel}
             </Button>
           </div>
         </div>

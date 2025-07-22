@@ -37,6 +37,13 @@
   color: var(--primary-color);
 }
 
+.profile__headerInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align left */
+  gap: 8px;
+}
+
 .profile__headerInfo h2 {
   margin: 0;
   font-size: 20px;
@@ -44,10 +51,26 @@
   color: var(--text-primary);
 }
 
+.profile__roleTag {
+  display: inline-block;
+  margin-left: 0;      /* Remove left margin */
+  margin-top: 6px;     /* Add top margin for spacing below name */
+  padding: 4px 16px;   /* Slightly larger padding for visibility */
+  border-radius: 16px;
+  font-size: 1em;
+  font-weight: 600;
+  background: #d16ba5;
+  color: #fff;
+  text-align: left; /* Align text left */
+  min-width: 90px;
+}
+
 .profile__sivCount {
   font-size: 14px;
   color: var(--text-secondary);
   font-weight: 400;
+  text-align: left;
+  margin-left: 16px; /* Add left margin to move it right */
 }
 
 .profile__coverSection {
@@ -237,6 +260,16 @@
 
 .profile__emptyState p {
   margin: 0;
+}
+
+/* Add to App.css or Profile.css */
+.edit-input select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  background: var(--background-tertiary);
+  color: var(--text-primary);
 }
 
 /* Responsive design */

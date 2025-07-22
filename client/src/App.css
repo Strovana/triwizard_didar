@@ -107,3 +107,51 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
+
+/* Edit Modal Styles */
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.edit-modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  min-width: 300px;
+  text-align: center;
+}
+
+.edit-input {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+}
+
+.edit-save-btn, .edit-cancel-btn {
+  padding: 0.5rem 1.2rem;
+  margin-right: 0.5rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.edit-cancel-btn {
+  background: var(--accent-color);
+}
