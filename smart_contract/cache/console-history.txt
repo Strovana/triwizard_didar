@@ -1,0 +1,6 @@
+.help
+console.log("Balance (MATIC):", ethers.utils.formatEther(bal));
+const bal = await ethers.provider.getBalance(await signer.getAddress());
+const [signer] = await ethers.getSigners();
+const console.log("Balance (MATIC):", ethers.utils.formatEther(bal));
+const [signer] = await ethers.getSigners();

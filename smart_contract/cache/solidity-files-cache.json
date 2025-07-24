@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\asus\\Documents\\triwizard_didar\\smart_contract\\contracts\\NotesRegistry.sol": {
+      "lastModificationDate": 1753274692900,
+      "contentHash": "f8ae175fe1d9bd24c1f5c4fd78ce9b66",
+      "sourceName": "contracts/NotesRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "NotesRegistry"
+      ]
+    }
+  }
+}

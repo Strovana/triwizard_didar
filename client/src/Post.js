@@ -1,5 +1,6 @@
 import React, { forwardRef, useState, useEffect } from "react";
 import "./Post.css";
+import { uploadToIPFS } from "./ipfs"; // adjust path if needed
 import Avatar from 'react-avatar';
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -11,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Poll from './Poll';
 
 const Post = forwardRef(
-  ({ displayName, text, personal, onClick }, ref) => {
+  ({ displayName, text, personal, onClick, cid }, ref) => {
     const [votedPolls, setVotedPolls] = useState(new Set());
     const [pollData, setPollData] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
@@ -96,11 +97,21 @@ const Post = forwardRef(
     };
 
     // Handle share
-    const handleShare = () => {
-      navigator.clipboard.writeText(`Check out this Siv: "${text.length > 50 ? text.substring(0, 50) + '...' : text}"`);
-      setShareCount(prev => prev + 1);
-      alert("📤 Siv copied to clipboard!");
-    };
+   const handleShare = async () => {
+     try {
+       const cid = await uploadToIPFS(text, "siv-post.txt");
+
+       navigator.clipboard.writeText(
+         `Check out this Siv: https://ipfs.io/ipfs/${cid}`
+       );
+       setShareCount((prev) => prev + 1);
+       alert("📤 Siv copied to clipboard with IPFS link!");
+     } catch (error) {
+       console.error("Upload failed:", error);
+       alert("❌ Failed to upload to IPFS.");
+     }
+   };
+
 
     // Truncate long wallet addresses for avatar display
     const getDisplayName = (name) => {
@@ -117,9 +128,9 @@ const Post = forwardRef(
     return (
       <div className="post" ref={ref}>
         <div className="post__avatar">
-          <Avatar 
-            name={avatarName} 
-            size="50" 
+          <Avatar
+            name={avatarName}
+            size="50"
             round={true}
             color="#bb2b7a"
             fgColor="#ffffff"
@@ -128,11 +139,29 @@ const Post = forwardRef(
         <div className="post__body">
           <div className="post__header">
             <div className="post__headerText">
-              <h3>
-                {displayName}{" "}
-              </h3>
+              <h3>{displayName} </h3>
             </div>
             <div className="post__headerDescription">
+              <a
+                href={`https://${cid}.ipfs.w3s.link`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on IPFS
+              </a>
+
+              {cid && (
+                <div className="post__cid">
+                  <span>CID: </span>
+                  <a
+                    href={`https://ipfs.io/ipfs/${cid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {cid}
+                  </a>
+                </div>
+              )}
               {isPoll() ? (
                 <Poll
                   question={currentPollData.question}
@@ -152,12 +181,26 @@ const Post = forwardRef(
               <ChatBubbleOutlineIcon fontSize="small" />
               <span className="post__footerCount">{commentCount}</span>
             </div>
-            <div className={`post__footerOption ${isRetweeted ? 'post__footerOption--active' : ''}`} onClick={handleRetweet}>
+            <div
+              className={`post__footerOption ${
+                isRetweeted ? "post__footerOption--active" : ""
+              }`}
+              onClick={handleRetweet}
+            >
               <RepeatIcon fontSize="small" />
               <span className="post__footerCount">{retweetCount}</span>
             </div>
-            <div className={`post__footerOption ${isLiked ? 'post__footerOption--liked' : ''}`} onClick={handleLike}>
-              {isLiked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
+            <div
+              className={`post__footerOption ${
+                isLiked ? "post__footerOption--liked" : ""
+              }`}
+              onClick={handleLike}
+            >
+              {isLiked ? (
+                <FavoriteIcon fontSize="small" />
+              ) : (
+                <FavoriteBorderIcon fontSize="small" />
+              )}
               <span className="post__footerCount">{likeCount}</span>
             </div>
             <div className="post__footerOption" onClick={handleShare}>
@@ -165,10 +208,15 @@ const Post = forwardRef(
               <span className="post__footerCount">{shareCount}</span>
             </div>
             {personal ? (
-              <div className="post__footerOption post__footerOption--delete" onClick={onClick}>
+              <div
+                className="post__footerOption post__footerOption--delete"
+                onClick={onClick}
+              >
                 <DeleteIcon fontSize="small" />
               </div>
-            ) : ("")}
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

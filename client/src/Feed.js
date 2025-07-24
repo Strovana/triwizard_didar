@@ -36,21 +36,24 @@ const getUpdatedSivs = (allSivs, address) => {
 
       if(allSivs[i].username.toLowerCase() === address.toLowerCase()) {
         let siv = {
-          'id': allSivs[i].id,
-          'sivText': sivData,
-          'isDeleted': allSivs[i].isDeleted,
-          'username': allSivs[i].username,
-          'personal': true
+          id: allSivs[i].id,
+          sivText: sivData,
+          isDeleted: allSivs[i].isDeleted,
+          username: allSivs[i].username,
+          personal: allSivs[i].username.toLowerCase() === address.toLowerCase(),
+          cid: allSivs[i].cid, // 
         };
         updatedSivs.push(siv);
       } else {
           let siv = {
-          'sivText': sivData,
-          'id': allSivs[i].id,
-          'isDeleted': allSivs[i].isDeleted,
-          'username': allSivs[i].username,
-          'personal': false
-        };
+            id: allSivs[i].id,
+            sivText: sivData,
+            isDeleted: allSivs[i].isDeleted,
+            username: allSivs[i].username,
+            personal:
+              allSivs[i].username.toLowerCase() === address.toLowerCase(),
+            cid: allSivs[i].cid, // 
+          };
         updatedSivs.push(siv);
       }
     }
@@ -84,53 +87,62 @@ const getUpdatedSivs = (allSivs, address) => {
     getAllSivs();
   }, []);
 
-  const deleteSiv = key => async () => {
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
+ const deleteSiv = (key) => async () => {
+   try {
+     const { ethereum } = window;
+     if (ethereum) {
        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const socivaContract = new Contract(
-          SocivaContractAddress,
-          Sociva.abi,
-          signer
-        );
+       const signer = await provider.getSigner();
+       const socivaContract = new Contract(
+         SocivaContractAddress,
+         Sociva.abi,
+         signer
+       );
 
-       let deleteSivTx = await socivaContract.deleteSiv(key,true);
-       let allSivs
-        setPosts(getUpdatedSivs(allSivs, ethereum.selectedAddress));
-      } else {
-        console.log("Ethereum object not found");
-      }
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
+       const deleteSivTx = await socivaContract.deleteSiv(key, true);
+       await deleteSivTx.wait(); // 🛠️ Wait for confirmation
+
+       const address = await signer.getAddress();
+       const allSivs = await socivaContract.getAllSivs();
+       setPosts(getUpdatedSivs(allSivs, address));
+     } else {
+       console.log("Ethereum object not found");
+     }
+   } catch (error) {
+     console.error("Error deleting post:", error);
+   }
+ };
+
+  const refreshFeed = () => {
+    getAllSivs();
   };
 
-   return (
-    <div className="feed">
-      <div className="feed_header">
-        <h2>Home</h2>
-      </div>
 
-      <SivBox />
-      <div className="feed__content">
-        <FlipMove>
-          {posts.map((post) => (
-            <div key={post.id} className="feed__post">
-              <Post 
-                post={post} 
-                displayName={post.username}
-                text={post.sivText}
-                personal={post.personal}
-                onClick={deleteSiv(post.id)}
-              />
-            </div>
-          ))}
-        </FlipMove>
-      </div>
-    </div>
-  );
+   return (
+     <div className="feed">
+       <div className="feed_header">
+         <h2>Home</h2>
+       </div>
+
+       <SivBox onPost={refreshFeed} />
+       <div className="feed__content">
+         <FlipMove>
+           {posts.map((post) => (
+             <div key={post.id} className="feed__post">
+               <Post
+                 post={post}
+                 displayName={post.username}
+                 text={post.sivText}
+                 personal={post.personal}
+                 cid={post.cid}
+                 onClick={deleteSiv(post.id)}
+               />
+             </div>
+           ))}
+         </FlipMove>
+       </div>
+     </div>
+   );
 
 
 }

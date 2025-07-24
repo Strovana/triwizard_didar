@@ -143,3 +143,24 @@
   font-size: 12px;
   color: var(--text-secondary);
 }
+
+
+
+.post__cid {
+  font-size: 13px;
+  word-break: break-all;
+  background-color: #2c2c3e;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  color: #e0e0e0;
+}
+
+.post__cid a {
+  color: #bb2b7a;
+  text-decoration: none;
+}
+
+.post__cid a:hover {
+  text-decoration: underline;
+}
