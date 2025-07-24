@@ -1,14 +1,14 @@
 :root {
-  --primary-color: #8f3bbf;           /* Vibrant Violet */
-  --primary-hover: #5a217a;           /* Deep Violet */
-  --secondary-color: #e09ec3;         /* Soft Pinkish Lavender */
-  --accent-color: #d16ba5;            /* Magical Pink-Purple */
-  --text-primary: #fbeaff;            /* Pale Pinkish Violet */
-  --text-secondary: #e0b3e6;          /* Muted Pink Lavender */
-  --background-primary: #1a0826;      /* Very Dark Purple */
-  --background-secondary: #24113a;    /* Deep Violet Black */
-  --background-tertiary: #3d235a;     /* Tertiary Purple */
-  --border-color: #d16ba5;            /* Pinkish Accent */
+  --primary-color: #8f3bbf;
+  --primary-hover: #5a217a;
+  --secondary-color: #e09ec3;
+  --accent-color: #d16ba5;
+  --text-primary: #fbeaff;
+  --text-secondary: #e0b3e6;
+  --background-primary: #1a0826;
+  --background-secondary: #24113a;
+  --background-tertiary: #3d235a;
+  --border-color: #d16ba5;
   --shadow-light: 0 1px 3px rgba(209, 107, 165, 0.15);
   --shadow-medium: 0 4px 6px rgba(209, 107, 165, 0.18);
   --shadow-heavy: 0 8px 25px rgba(209, 107, 165, 0.25);
@@ -108,50 +108,102 @@ body {
   background: var(--text-secondary);
 }
 
-/* Edit Modal Styles */
+/* ============================== */
+/* Edit Modal Styles              */
+/* ============================== */
 .edit-modal {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 9999;
 }
 
 .edit-modal-content {
-  background: #fff;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
   padding: 2rem;
-  border-radius: 8px;
-  min-width: 300px;
-  text-align: center;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-heavy);
+  animation: slideDown 0.3s ease-out;
 }
 
-.edit-input {
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-label {
+  display: block;
+  font-weight: bold;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  margin-top: 1rem;
+}
+
+.edit-input,
+.edit-input select {
   width: 100%;
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius-small);
   border: 1px solid var(--border-color);
   font-size: 1rem;
   background: var(--background-tertiary);
   color: var(--text-primary);
 }
 
-.edit-save-btn, .edit-cancel-btn {
+.edit-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.edit-save-btn,
+.edit-cancel-btn {
   padding: 0.5rem 1.2rem;
   margin-right: 0.5rem;
-  border-radius: 6px;
+  border-radius: var(--border-radius-small);
+  font-weight: bold;
   border: none;
-  background: var(--primary-color);
-  color: #fff;
   cursor: pointer;
+  font-size: 1rem;
   transition: var(--transition);
 }
 
+.edit-save-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.edit-save-btn:hover {
+  background-color: var(--primary-hover);
+}
+
 .edit-cancel-btn {
-  background: var(--accent-color);
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.edit-cancel-btn:hover {
+  background-color: #c15597;
+}
+
+/* Preview image styling */
+.edit-modal-content img {
+  margin-top: 10px;
+  border-radius: 8px;
+  max-width: 100%;
+  object-fit: cover;
 }

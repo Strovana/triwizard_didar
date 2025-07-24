@@ -19,7 +19,7 @@ import Badge from "@mui/material/Badge";
 import Collapse from "@mui/material/Collapse";
 import logo from "./Notemoire_logo.png";
 
-function Sidebar({ onNavigate, currentView }){
+function Sidebar({ onNavigate, currentView }) {
   const [activeItem, setActiveItem] = useState("Home");
   const [showMore, setShowMore] = useState(false);
   const [notifications, setNotifications] = useState(3);
@@ -57,9 +57,9 @@ function Sidebar({ onNavigate, currentView }){
 
   const handleNavigation = (item) => {
     setActiveItem(item);
-    
+
     // Handle different navigation actions
-    switch(item) {
+    switch (item) {
       case "Home":
         console.log("Navigating to Home feed");
         if (onNavigate) onNavigate('home');
@@ -71,26 +71,41 @@ function Sidebar({ onNavigate, currentView }){
         break;
       case "Explore":
         console.log("Opening Explore page");
-        alert("🔍 Exploring trending Sivs and topics...");
+        alert("🧙‍♂️ The 'Explore' charm is still being brewed deep within the dungeons. This feature will be added in a future update.");
         break;
+
       case "Notifications":
         console.log("Opening Notifications");
-        alert(`📢 You have ${notifications} new notifications!`);
-        setNotifications(0); // Clear notifications when viewed
+        alert("📨 The Owl Post is currently off duty. Notifications will be delivered magically in a future update.");
+        setNotifications(0);
         break;
+
       case "Messages":
         console.log("Opening Messages");
-        alert(`💬 You have ${messages} new messages!`);
-        setMessages(0); // Clear messages when viewed
+        alert("🦉 Your enchanted messages are still traveling through the Floo Network. This feature will be available in a future update.");
+        setMessages(0);
         break;
+
       case "Bookmarks":
         console.log("Opening Bookmarks");
-        alert("🔖 Viewing your saved Sivs...");
+        alert("🔖 The Bookmarks are still hidden in the Restricted Section. They shall be unlocked in a future update.");
         break;
+
       case "Lists":
         console.log("Opening Lists");
-        alert("📋 Managing your Siv lists...");
+        alert("📜 The Lists Ledger is still being transcribed by magical quills. This feature will be introduced in a future update.");
         break;
+
+      case "Settings":
+        console.log("Opening Settings");
+        alert("⚙️ The Room of Requirement hasn’t revealed your Settings yet. They will be accessible in a future update.");
+        break;
+
+      case "Help":
+        console.log("Opening Help");
+        alert("❓ The enchanted Help Scrolls are still being prepared. Assistance will be available in a future update.");
+        break;
+
       case "Profile":
         console.log("Opening Profile");
         if (onNavigate) {
@@ -131,123 +146,123 @@ function Sidebar({ onNavigate, currentView }){
   };
 
   return (
-        <div className="sidebar">
-          <img src={logo} className="sidebar__logo" alt="Sociva Logo" />
-          
-          <div className="sidebar__navigation">
-            <SidebarOption 
-              Icon={HomeIcon} 
-              text="Home" 
-              active={activeItem === "Home"}
-              onClick={() => handleNavigation("Home")}
-            />
-            
-            <SidebarOption 
-              Icon={SearchIcon} 
-              text="Explore" 
-              active={activeItem === "Explore"}
-              onClick={() => handleNavigation("Explore")}
-            />
-            
-            <SidebarOption 
-              Icon={notifications > 0 ? NotificationsIcon : NotificationsNoneIcon} 
-              text="Notifications" 
-              active={activeItem === "Notifications"}
-              badge={notifications}
-              onClick={() => handleNavigation("Notifications")}
-            />
-            
-            <SidebarOption 
-              Icon={MailOutlineIcon} 
-              text="Messages" 
-              active={activeItem === "Messages"}
-              badge={messages}
-              onClick={() => handleNavigation("Messages")}
-            />
-            
-            <SidebarOption 
-              Icon={BookmarkBorderIcon} 
-              text="Bookmarks" 
-              active={activeItem === "Bookmarks"}
-              onClick={() => handleNavigation("Bookmarks")}
-            />
-            
-            <SidebarOption 
-              Icon={ListAltIcon} 
-              text="Lists" 
-              active={activeItem === "Lists"}
-              onClick={() => handleNavigation("Lists")}
-            />
-            
-            <SidebarOption 
-              Icon={PermIdentityIcon} 
-              text="Profile" 
-              active={activeItem === "Profile"}
-              onClick={() => handleNavigation("Profile")}
-            />
-            
-            <SidebarOption 
-              Icon={MoreHorizIcon} 
-              text="More" 
-              active={showMore}
-              onClick={handleMoreClick}
-            />
+    <div className="sidebar">
+      <img src={logo} className="sidebar__logo" alt="Sociva Logo" />
 
-            {/* Collapsible More Options */}
-            <Collapse in={showMore} timeout="auto" unmountOnExit>
-              <div className="sidebar__moreOptions">
-                <SidebarOption 
-                  Icon={SettingsIcon} 
-                  text="Settings" 
-                  active={activeItem === "Settings"}
-                  onClick={() => handleNavigation("Settings")}
-                  nested
-                />
-                <SidebarOption 
-                  Icon={HelpOutlineIcon} 
-                  text="Help Center" 
-                  active={activeItem === "Help"}
-                  onClick={() => handleNavigation("Help")}
-                  nested
-                />
-                <SidebarOption 
-                  Icon={LogoutIcon} 
-                  text="Logout" 
-                  onClick={() => handleNavigation("Logout")}
-                  nested
-                />
-              </div>
-            </Collapse>
-          </div>
+      <div className="sidebar__navigation">
+        <SidebarOption
+          Icon={HomeIcon}
+          text="Home"
+          active={activeItem === "Home"}
+          onClick={() => handleNavigation("Home")}
+        />
 
-          {/* User Stats */}
-          <div className="sidebar__userStats">
-            <div className="sidebar__stat" onClick={() => handleNavigation("Profile")}>
-              <span className="sidebar__statNumber">{userStats.sivs}</span>
-              <span className="sidebar__statLabel">Sivs</span>
-            </div>
-            <div className="sidebar__stat" onClick={() => alert(`Following ${userStats.following} accounts`)}>
-              <span className="sidebar__statNumber">{userStats.following}</span>
-              <span className="sidebar__statLabel">Following</span>
-            </div>
-            <div className="sidebar__stat" onClick={() => alert(`${userStats.followers} followers`)}>
-              <span className="sidebar__statNumber">{userStats.followers}</span>
-              <span className="sidebar__statLabel">Followers</span>
-            </div>
+        <SidebarOption
+          Icon={SearchIcon}
+          text="Explore"
+          active={activeItem === "Explore"}
+          onClick={() => handleNavigation("Explore")}
+        />
+
+        <SidebarOption
+          Icon={notifications > 0 ? NotificationsIcon : NotificationsNoneIcon}
+          text="Notifications"
+          active={activeItem === "Notifications"}
+          badge={notifications}
+          onClick={() => handleNavigation("Notifications")}
+        />
+
+        <SidebarOption
+          Icon={MailOutlineIcon}
+          text="Messages"
+          active={activeItem === "Messages"}
+          badge={messages}
+          onClick={() => handleNavigation("Messages")}
+        />
+
+        <SidebarOption
+          Icon={BookmarkBorderIcon}
+          text="Bookmarks"
+          active={activeItem === "Bookmarks"}
+          onClick={() => handleNavigation("Bookmarks")}
+        />
+
+        <SidebarOption
+          Icon={ListAltIcon}
+          text="Lists"
+          active={activeItem === "Lists"}
+          onClick={() => handleNavigation("Lists")}
+        />
+
+        <SidebarOption
+          Icon={PermIdentityIcon}
+          text="Profile"
+          active={activeItem === "Profile"}
+          onClick={() => handleNavigation("Profile")}
+        />
+
+        <SidebarOption
+          Icon={MoreHorizIcon}
+          text="More"
+          active={showMore}
+          onClick={handleMoreClick}
+        />
+
+        {/* Collapsible More Options */}
+        <Collapse in={showMore} timeout="auto" unmountOnExit>
+          <div className="sidebar__moreOptions">
+            <SidebarOption
+              Icon={SettingsIcon}
+              text="Settings"
+              active={activeItem === "Settings"}
+              onClick={() => handleNavigation("Settings")}
+              nested
+            />
+            <SidebarOption
+              Icon={HelpOutlineIcon}
+              text="Help Center"
+              active={activeItem === "Help"}
+              onClick={() => handleNavigation("Help")}
+              nested
+            />
+            <SidebarOption
+              Icon={LogoutIcon}
+              text="Logout"
+              onClick={() => handleNavigation("Logout")}
+              nested
+            />
           </div>
-    
-          {/* Siv Button */}
-          <Button
-            className="sidebar__siv"
-            variant="contained"
-            disableElevation
-            onClick={handleSivClick}
-            startIcon={<CreateIcon />}
-          >
-            Siv
-          </Button>
+        </Collapse>
+      </div>
+
+      {/* User Stats */}
+      <div className="sidebar__userStats">
+        <div className="sidebar__stat" onClick={() => handleNavigation("Profile")}>
+          <span className="sidebar__statNumber">{userStats.sivs}</span>
+          <span className="sidebar__statLabel">Sivs</span>
         </div>
-      );
+        <div className="sidebar__stat" onClick={() => alert(`Following ${userStats.following} accounts`)}>
+          <span className="sidebar__statNumber">{userStats.following}</span>
+          <span className="sidebar__statLabel">Following</span>
+        </div>
+        <div className="sidebar__stat" onClick={() => alert(`${userStats.followers} followers`)}>
+          <span className="sidebar__statNumber">{userStats.followers}</span>
+          <span className="sidebar__statLabel">Followers</span>
+        </div>
+      </div>
+
+      {/* Siv Button */}
+      <Button
+        className="sidebar__siv"
+        variant="contained"
+        disableElevation
+        onClick={handleSivClick}
+        startIcon={<CreateIcon />}
+      >
+        Siv
+      </Button>
+    </div>
+  );
 
 }
 

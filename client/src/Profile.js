@@ -101,7 +101,7 @@ function Profile({
     <div className="profile">
       {/* Header */}
       <div className="profile__header">
-        <div className="profile__headerTop">
+        {/* <div className="profile__headerTop">
           <div className="profile__backButton" onClick={onBack}>
             <ArrowBackIcon />
           </div>
@@ -114,7 +114,7 @@ function Profile({
             )}
             <span className="profile__sivCount">{userProfile.sivs} Sivs</span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Cover and Avatar Section */}

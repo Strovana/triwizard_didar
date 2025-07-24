@@ -3,26 +3,21 @@ import SivBox from "./SivBox.js";
 import Post from "./Post.js";
 import "./Feed.css";
 import FlipMove from "react-flip-move";
-import axios from 'axios';
-import Sociva from './utils/socivaContract.json';
-import { SocivaContractAddress } from './config.js';
+import Sociva from "./utils/socivaContract.json";
+import { SocivaContractAddress } from "./config.js";
 import { BrowserProvider, Contract } from "ethers";
 
-function Feed(){
-
+function Feed() {
   const [posts, setPosts] = useState([]);
-  
-const getUpdatedSivs = (allSivs, address) => {
+
+  const getUpdatedSivs = (allSivs, address) => {
     let updatedSivs = [];
-    // Here we set a personal flag around the sivs
-    for(let i=0; i<allSivs.length; i++) {
+    for (let i = 0; i < allSivs.length; i++) {
       let sivData;
-      
-      // Check if this is a poll
+
       try {
         const parsed = JSON.parse(allSivs[i].sivText);
-        if (parsed.type === 'poll') {
-          // Add poll ID if not present
+        if (parsed.type === "poll") {
           if (!parsed.id) {
             parsed.id = `poll_${allSivs[i].id}_${Date.now()}`;
           }
@@ -34,52 +29,62 @@ const getUpdatedSivs = (allSivs, address) => {
         sivData = allSivs[i].sivText;
       }
 
-      if(allSivs[i].username.toLowerCase() === address.toLowerCase()) {
-        let siv = {
-          id: allSivs[i].id,
-          sivText: sivData,
-          isDeleted: allSivs[i].isDeleted,
-          username: allSivs[i].username,
-          personal: allSivs[i].username.toLowerCase() === address.toLowerCase(),
-          cid: allSivs[i].cid, // 
-        };
-        updatedSivs.push(siv);
-      } else {
-          let siv = {
-            id: allSivs[i].id,
-            sivText: sivData,
-            isDeleted: allSivs[i].isDeleted,
-            username: allSivs[i].username,
-            personal:
-              allSivs[i].username.toLowerCase() === address.toLowerCase(),
-            cid: allSivs[i].cid, // 
-          };
-        updatedSivs.push(siv);
-      }
+      let siv = {
+        id: allSivs[i].id,
+        sivText: sivData,
+        isDeleted: allSivs[i].isDeleted,
+        username: allSivs[i].username,
+        personal: allSivs[i].username.toLowerCase() === address.toLowerCase(),
+        cid: allSivs[i].cid || null,
+      };
+      updatedSivs.push(siv);
     }
     return updatedSivs.reverse();
-  }
+  };
 
   const getAllSivs = async () => {
     try {
       const { ethereum } = window;
       if (ethereum) {
-        const provider = new BrowserProvider(window.ethereum);
+        const provider = new BrowserProvider(ethereum);
         const signer = await provider.getSigner();
         const socivaContract = new Contract(
           SocivaContractAddress,
           Sociva.abi,
           signer
         );
-
-        let allSivs = await socivaContract.getAllSivs();
-        setPosts(getUpdatedSivs(allSivs, ethereum.selectedAddress));
-      }else{
+        const allSivs = await socivaContract.getAllSivs();
+        const address = await signer.getAddress();
+        setPosts(getUpdatedSivs(allSivs, address));
+      } else {
         console.log("Ethereum object not found");
       }
-
     } catch (error) {
       console.error("Error fetching posts:", error);
+    }
+  };
+
+  const deleteSiv = (key) => async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new BrowserProvider(ethereum);
+        const signer = await provider.getSigner();
+        const socivaContract = new Contract(
+          SocivaContractAddress,
+          Sociva.abi,
+          signer
+        );
+        const deleteSivTx = await socivaContract.deleteSiv(key, true);
+        await deleteSivTx.wait();
+        const allSivs = await socivaContract.getAllSivs();
+        const address = await signer.getAddress();
+        setPosts(getUpdatedSivs(allSivs, address));
+      } else {
+        console.log("Ethereum object not found");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -87,64 +92,30 @@ const getUpdatedSivs = (allSivs, address) => {
     getAllSivs();
   }, []);
 
- const deleteSiv = (key) => async () => {
-   try {
-     const { ethereum } = window;
-     if (ethereum) {
-       const provider = new BrowserProvider(window.ethereum);
-       const signer = await provider.getSigner();
-       const socivaContract = new Contract(
-         SocivaContractAddress,
-         Sociva.abi,
-         signer
-       );
-
-       const deleteSivTx = await socivaContract.deleteSiv(key, true);
-       await deleteSivTx.wait(); // 🛠️ Wait for confirmation
-
-       const address = await signer.getAddress();
-       const allSivs = await socivaContract.getAllSivs();
-       setPosts(getUpdatedSivs(allSivs, address));
-     } else {
-       console.log("Ethereum object not found");
-     }
-   } catch (error) {
-     console.error("Error deleting post:", error);
-   }
- };
-
-  const refreshFeed = () => {
-    getAllSivs();
-  };
-
-
-   return (
-     <div className="feed">
-       <div className="feed_header">
-         <h2>Home</h2>
-       </div>
-
-       <SivBox onPost={refreshFeed} />
-       <div className="feed__content">
-         <FlipMove>
-           {posts.map((post) => (
-             <div key={post.id} className="feed__post">
-               <Post
-                 post={post}
-                 displayName={post.username}
-                 text={post.sivText}
-                 personal={post.personal}
-                 cid={post.cid}
-                 onClick={deleteSiv(post.id)}
-               />
-             </div>
-           ))}
-         </FlipMove>
-       </div>
-     </div>
-   );
-
-
+  return (
+    <div className="feed">
+      <div className="feed_header">
+        <h2>Home</h2>
+      </div>
+      <SivBox onPost={getAllSivs} refreshFeed={getAllSivs} />
+      <div className="feed__content">
+        <FlipMove>
+          {posts.map((post) => (
+            <div key={post.id} className="feed__post">
+              <Post
+                post={post}
+                displayName={post.username}
+                text={post.sivText}
+                personal={post.personal}
+                cid={post.cid}
+                onClick={deleteSiv(post.id)}
+              />
+            </div>
+          ))}
+        </FlipMove>
+      </div>
+    </div>
+  );
 }
 
 export default Feed;
