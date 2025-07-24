@@ -8,16 +8,16 @@ import Sociva from './utils/socivaContract.json';
 import { SocivaContractAddress } from './config.js';
 import { BrowserProvider, Contract } from "ethers";
 
-function Feed(){
+function Feed() {
 
   const [posts, setPosts] = useState([]);
-  
-const getUpdatedSivs = (allSivs, address) => {
+
+  const getUpdatedSivs = (allSivs, address) => {
     let updatedSivs = [];
     // Here we set a personal flag around the sivs
-    for(let i=0; i<allSivs.length; i++) {
+    for (let i = 0; i < allSivs.length; i++) {
       let sivData;
-      
+
       // Check if this is a poll
       try {
         const parsed = JSON.parse(allSivs[i].sivText);
@@ -34,7 +34,7 @@ const getUpdatedSivs = (allSivs, address) => {
         sivData = allSivs[i].sivText;
       }
 
-      if(allSivs[i].username.toLowerCase() === address.toLowerCase()) {
+      if (allSivs[i].username.toLowerCase() === address.toLowerCase()) {
         let siv = {
           'id': allSivs[i].id,
           'sivText': sivData,
@@ -44,7 +44,7 @@ const getUpdatedSivs = (allSivs, address) => {
         };
         updatedSivs.push(siv);
       } else {
-          let siv = {
+        let siv = {
           'sivText': sivData,
           'id': allSivs[i].id,
           'isDeleted': allSivs[i].isDeleted,
@@ -71,7 +71,7 @@ const getUpdatedSivs = (allSivs, address) => {
 
         let allSivs = await socivaContract.getAllSivs();
         setPosts(getUpdatedSivs(allSivs, ethereum.selectedAddress));
-      }else{
+      } else {
         console.log("Ethereum object not found");
       }
 
@@ -88,7 +88,7 @@ const getUpdatedSivs = (allSivs, address) => {
     try {
       const { ethereum } = window;
       if (ethereum) {
-       const provider = new BrowserProvider(window.ethereum);
+        const provider = new BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const socivaContract = new Contract(
           SocivaContractAddress,
@@ -96,8 +96,8 @@ const getUpdatedSivs = (allSivs, address) => {
           signer
         );
 
-       let deleteSivTx = await socivaContract.deleteSiv(key,true);
-       let allSivs
+        let deleteSivTx = await socivaContract.deleteSiv(key, true);
+        let allSivs
         setPosts(getUpdatedSivs(allSivs, ethereum.selectedAddress));
       } else {
         console.log("Ethereum object not found");
@@ -107,24 +107,25 @@ const getUpdatedSivs = (allSivs, address) => {
     }
   };
 
-   return (
+  return (
     <div className="feed">
       <div className="feed_header">
         <h2>Home</h2>
       </div>
 
-      <SivBox />
+<SivBox refreshFeed={getAllSivs} />
       <div className="feed__content">
         <FlipMove>
           {posts.map((post) => (
             <div key={post.id} className="feed__post">
-              <Post 
-                post={post} 
+              <Post
+                post={post}
                 displayName={post.username}
                 text={post.sivText}
                 personal={post.personal}
                 onClick={deleteSiv(post.id)}
               />
+
             </div>
           ))}
         </FlipMove>

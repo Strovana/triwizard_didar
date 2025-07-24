@@ -15,12 +15,12 @@ const Profile = () => {
 
   return (
     <div className="profile-card">
-      <img src={user.bannerImage} className="banner" alt="Banner" />
-      <img src={user.profilePicture} className="profile-pic" alt="Profile" />
       <h2>{user.name}</h2>
       <p>@{shortWallet(walletAddress)}</p>
       <p>{user.bio}</p>
-      <a href={user.website} target="_blank" rel="noopener noreferrer">{user.website}</a>
+      <a href={user.website} target="_blank" rel="noopener noreferrer">
+        {user.website}
+      </a>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>
     </div>
   );

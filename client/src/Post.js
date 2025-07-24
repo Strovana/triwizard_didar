@@ -10,6 +10,58 @@ import PublishIcon from "@mui/icons-material/Publish";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Poll from './Poll';
 
+const isPDF = (url) => {
+  return typeof url === "string" && url.toLowerCase().endsWith(".pdf");
+};
+
+function PDFModal({ open, onClose, pdfUrl }) {
+  if (!open) return null;
+  return (
+    <div style={{
+      position: "fixed",
+      top: 0, left: 0, right: 0, bottom: 0,
+      background: "rgba(0,0,0,0.7)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+    }}>
+      <div style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 8,
+        maxWidth: "90vw",
+        maxHeight: "90vh",
+        position: "relative"
+      }}>
+        <button
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            background: "#bb2b7a",
+            color: "#fff",
+            border: "none",
+            borderRadius: 4,
+            padding: "4px 8px",
+            cursor: "pointer"
+          }}
+          onClick={onClose}
+        >
+          Close
+        </button>
+        <iframe
+          src={pdfUrl}
+          width="800px"
+          height="600px"
+          title="PDF Preview"
+          style={{ border: "none" }}
+        ></iframe>
+      </div>
+    </div>
+  );
+}
+
 const Post = forwardRef(
   ({ displayName, text, personal, onClick }, ref) => {
     const [votedPolls, setVotedPolls] = useState(new Set());
@@ -20,6 +72,7 @@ const Post = forwardRef(
     const [retweetCount, setRetweetCount] = useState(Math.floor(Math.random() * 50));
     const [commentCount, setCommentCount] = useState(Math.floor(Math.random() * 30));
     const [shareCount, setShareCount] = useState(Math.floor(Math.random() * 20));
+    const [pdfModalOpen, setPdfModalOpen] = useState(false);
 
     // Check if this is a poll
     const isPoll = () => {
@@ -56,7 +109,7 @@ const Post = forwardRef(
     // Handle voting
     const handleVote = (pollId, selectedOption) => {
       console.log(`Voting for option: ${selectedOption} in poll: ${pollId}`);
-      
+
       // Update the poll data with the new vote
       setPollData(prevData => {
         const newData = { ...prevData };
@@ -64,10 +117,10 @@ const Post = forwardRef(
         newData.votes[selectedOption] = (newData.votes[selectedOption] || 0) + 1;
         return newData;
       });
-      
+
       // Mark that user has voted
       setVotedPolls(prev => new Set([...prev, pollId]));
-      
+
       // TODO: Update blockchain with vote in a real implementation
     };
 
@@ -117,9 +170,9 @@ const Post = forwardRef(
     return (
       <div className="post" ref={ref}>
         <div className="post__avatar">
-          <Avatar 
-            name={avatarName} 
-            size="50" 
+          <Avatar
+            name={avatarName}
+            size="50"
             round={true}
             color="#bb2b7a"
             fgColor="#ffffff"
@@ -142,10 +195,39 @@ const Post = forwardRef(
                   userHasVoted={votedPolls.has(currentPollData.id)}
                   pollId={currentPollData.id}
                 />
+              ) : isPDF(text) ? (
+                (() => {
+                  const match = text.match(/https:\/\/res\.cloudinary\.com\/[^\s]+\.pdf/);
+                  return match ? (
+                    <a
+                      href={match[0]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-block",
+                        background: "linear-gradient(90deg, #bb2b7a 0%, #6a1b9a 100%)",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "24px",
+                        padding: "10px 24px",
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                        textDecoration: "none",
+                        boxShadow: "0 2px 8px rgba(187,43,122,0.15)",
+                        margin: "12px 0"
+                      }}
+                    >
+                      📄 View PDF
+                    </a>
+                  ) : (
+                    <p>{text}</p>
+                  );
+                })()
               ) : (
                 <p>{text}</p>
               )}
             </div>
+
           </div>
           <div className="post__footer">
             <div className="post__footerOption" onClick={handleComment}>

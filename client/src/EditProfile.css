@@ -1,0 +1,56 @@
+
+
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.edit-modal-content {
+  background-color: var(--background-primary, #fff);
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.edit-input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+  border: 1px solid var(--border-color, #ccc);
+  font-size: 1rem;
+  background: var(--background-tertiary, #f9f9f9);
+  color: var(--text-primary, #000);
+}
+
+.edit-save-btn,
+.edit-cancel-btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-right: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-save-btn {
+  background-color: var(--primary-color, #bb2b7a);
+  color: #fff;
+}
+
+.edit-cancel-btn {
+  background-color: #eee;
+  color: #333;
+}
